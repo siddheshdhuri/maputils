@@ -23,7 +23,7 @@
 #' @export
 getMapPlotDF <- function(df){
 
-  if(Sys.Date() > "2018-07-31") stop("This package has expired please contact package author for update")
+  if(Sys.Date() > "2018-01-31") stop("This package has expired please contact package author for update")
 
   accounts <- df[ !duplicated(df$CONTRACT_SOLDTOID) , ]
 
