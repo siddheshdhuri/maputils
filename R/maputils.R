@@ -23,6 +23,8 @@
 #' @export
 getMapPlotDF <- function(df){
 
+  if(Sys.Date() > "2018-07-31") stop("This package has expired please contact package author for update")
+
   accounts <- df[ !duplicated(df$CONTRACT_SOLDTOID) , ]
 
   #' set NA account_values to zero
@@ -69,6 +71,8 @@ getMapPlotDF <- function(df){
 #'
 #' @export
 findLocations <- function(shape, location_coordinates, location_id_colname) {
+
+  if(Sys.Date() > "2018-07-31") stop("This package has expired please contact package author for update")
 
   # derive polygon coordinates and feature_type from shape input
   polygon_coordinates <- shape$geometry$coordinates
