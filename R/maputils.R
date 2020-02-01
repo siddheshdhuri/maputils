@@ -16,30 +16,40 @@
 
 #' function to get df to plot on map
 #'
-#' @param data.frame with account details and longitude latitude colums
+#' @param df with account details and longitude latitude colums
+#' @param UNIQUE_ID_COL unique identified column for customer recrods
+#' @param CUTOMER_SIZE_COL column to determine radius of circle.
+#' @param LONGITUDE_COL
+#' @param LATITUDE_COL
 #'
 #' @return data.frame with complete coordinates and radius for plotting
 #'
 #' @export
-getMapPlotDF <- function(df){
+getMapPlotDF <- function(df, UNIQUE_ID_COL, CUTOMER_SIZE_COL,
+                         LONGITUDE_COL=NULL, LONGITUDE_COL=NULL,
+                         radius_lower_limit=8, radius_upper_limit=60){
 
-  if(Sys.Date() > "2020-12-01") stop("This package has expired please contact package author for update")
-
-  accounts <- df[ !duplicated(df$CONTRACT_SOLDTOID) , ]
+  #' Keep one row per customer record unique_id
+  accounts <- df[ !duplicated(df[[UNIQUE_ID_COL]]) , ]
 
   #' set NA account_values to zero
-  accounts$ACCOUNT_INFO_VALUE[is.na(accounts$ACCOUNT_INFO_VALUE)] <- 0
+  accounts[[CUTOMER_SIZE_COL]][is.na(accounts[[CUTOMER_SIZE_COL]])] <- 0
 
-  has.cood.index <- complete.cases(accounts[,c("longitude","latitude")])
+  #' if coordiante columns are null return null
+  if(is.null(LONGITUDE_COL) | is.null(LONGITUDE_COL)) return(NULL)
 
+  has.cood.index <- complete.cases(accounts[,c(LONGITUDE_COL,LATITUDE_COL)])
   has.cood.account <- accounts[has.cood.index,]
 
+  #' if there is no row with coordiantes return NULL
   if(nrow(has.cood.account) <= 0) return(NULL)
 
-  has.cood.account$RADIUS <- scales::rescale(has.cood.account$ACCOUNT_INFO_VALUE, to = c(8,60))
+  #' crete new radius column and scale size column in the range 8 to 60
+  has.cood.account$RADIUS <- scales::rescale(
+    has.cood.account[[CUTOMER_SIZE_COL]], to = c(radius_lower_limit,radius_uper_limit))
 
   # generate second set of unique location IDs for second layer of selected locations
-  has.cood.account$secondLocationID <- paste0(as.character(has.cood.account$CONTRACT_SOLDTOID), "_selectedLayer")
+  has.cood.account$secondLocationID <- paste0(as.character(has.cood.account[[UNIQUE_ID_COL]]), "_selectedLayer")
 
   return(has.cood.account)
 
@@ -71,8 +81,6 @@ getMapPlotDF <- function(df){
 #'
 #' @export
 findLocations <- function(shape, location_coordinates, location_id_colname) {
-
-  if(Sys.Date() > "2020-12-01") stop("This package has expired please contact package author for update")
 
   # derive polygon coordinates and feature_type from shape input
   polygon_coordinates <- shape$geometry$coordinates
