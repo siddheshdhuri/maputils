@@ -46,7 +46,7 @@ getMapPlotDF <- function(df, UNIQUE_ID_COL, CUTOMER_SIZE_COL,
 
   #' crete new radius column and scale size column in the range 8 to 60
   has.cood.account$RADIUS <- scales::rescale(
-    has.cood.account[[CUTOMER_SIZE_COL]], to = c(radius_lower_limit,radius_uper_limit))
+    has.cood.account[[CUTOMER_SIZE_COL]], to = c(radius_lower_limit,radius_upper_limit))
 
   # generate second set of unique location IDs for second layer of selected locations
   has.cood.account$secondLocationID <- paste0(as.character(has.cood.account[[UNIQUE_ID_COL]]), "_selectedLayer")
