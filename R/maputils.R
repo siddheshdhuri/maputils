@@ -26,7 +26,7 @@
 #'
 #' @export
 getMapPlotDF <- function(df, UNIQUE_ID_COL, CUTOMER_SIZE_COL,
-                         LONGITUDE_COL=NULL, LONGITUDE_COL=NULL,
+                         LONGITUDE_COL=NULL, LATITUDE_COL=NULL,
                          radius_lower_limit=8, radius_upper_limit=60){
 
   #' Keep one row per customer record unique_id
@@ -36,7 +36,7 @@ getMapPlotDF <- function(df, UNIQUE_ID_COL, CUTOMER_SIZE_COL,
   accounts[[CUTOMER_SIZE_COL]][is.na(accounts[[CUTOMER_SIZE_COL]])] <- 0
 
   #' if coordiante columns are null return null
-  if(is.null(LONGITUDE_COL) | is.null(LONGITUDE_COL)) return(NULL)
+  if(is.null(LONGITUDE_COL) | is.null(LATITUDE_COL)) return(NULL)
 
   has.cood.index <- complete.cases(accounts[,c(LONGITUDE_COL,LATITUDE_COL)])
   has.cood.account <- accounts[has.cood.index,]
